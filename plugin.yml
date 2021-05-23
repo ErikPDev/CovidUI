@@ -1,0 +1,16 @@
+name: CovidUI
+author: ErikPDev
+api: 3.0.0
+version: 1.1
+main: ErikPDev\CovidUI\Main
+
+commands:
+  covidui:
+    description: "Information about the global pandemic"
+    permission: "CovidUI.use"
+
+permissions:
+  CovidUI.use:
+    description: "Permission to use CovidUI"
+    default: true
+

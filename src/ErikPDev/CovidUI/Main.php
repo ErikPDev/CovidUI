@@ -39,8 +39,8 @@ use pocketmine\event\Listener;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use jojoe77777\FormAPI\CustomForm;
-use pocketmine\utils\Internet;
 
+use ErikPDev\CovidUI\RepeatUpdateData;
 class Main extends PluginBase implements Listener {
     private $interval,$requestedData;
     private static $instance = NULL;
@@ -56,18 +56,8 @@ class Main extends PluginBase implements Listener {
           return;
         }
         $this->interval = $this->getConfig()->get("DataUpdateInterval") * 20;
-        $this->getScheduler()->scheduleRepeatingTask(new class extends \pocketmine\scheduler\Task{
-          public function onRun(int $currentTick) : void{
-            $result = Internet::getURL("https://disease.sh/v3/covid-19/countries/");
-            \ErikPDev\CovidUI\Main::getInstance()->UpdateData(json_decode($result,true));
-          }
-        }, $this->interval);
-        $this->getScheduler()->scheduleTask(new class extends \pocketmine\scheduler\Task{
-          public function onRun(int $currentTick) : void{
-            $result = Internet::getURL("https://disease.sh/v3/covid-19/countries/");
-            \ErikPDev\CovidUI\Main::getInstance()->UpdateData(json_decode($result,true));
-          }
-        });
+        $this->getScheduler()->scheduleRepeatingTask(new RepeatUpdateData(), $this->interval);
+        $this->getScheduler()->scheduleTask(new StarterUpdateData());
     }
 
     public function onLoad(){

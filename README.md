@@ -13,6 +13,7 @@ When a player runs `/covidui`, a UI will be shown telling the player to type a c
 
 # Libary
 <img src="https://raw.githubusercontent.com/ErikPDev/CovidUI/main/assets/UI.png">
+
 # Permissions & Commands
 | Commands       | Permission Nodes | Default |
 |----------------|------------------|---------|

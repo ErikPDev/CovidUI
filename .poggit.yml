@@ -8,4 +8,7 @@ projects:
     icon: "assets/icon.png"
     lint:
       phpstan: false
+    libs:
+    - src: jojoe77777/FormAPI/libFormAPI
+      version: ^1.3.0
 ...

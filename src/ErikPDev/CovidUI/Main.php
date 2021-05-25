@@ -42,7 +42,7 @@ use jojoe77777\FormAPI\CustomForm;
 
 use ErikPDev\CovidUI\RepeatUpdateData;
 class Main extends PluginBase implements Listener {
-    private $interval,$requestedData;
+    public $interval,$requestedData;
     private static $instance = NULL;
     
     public function onEnable() {
@@ -57,7 +57,6 @@ class Main extends PluginBase implements Listener {
         }
         $this->interval = $this->getConfig()->get("DataUpdateInterval") * 20;
         $this->getScheduler()->scheduleRepeatingTask(new RepeatUpdateData(), $this->interval);
-        $this->getScheduler()->scheduleTask(new StarterUpdateData());
     }
 
     public function onLoad(){

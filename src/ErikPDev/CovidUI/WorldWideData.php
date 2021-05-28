@@ -30,11 +30,31 @@
  */
 
 namespace ErikPDev\CovidUI;
-use pocketmine\utils\Internet;
+
+use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
-class RepeatUpdateData extends \pocketmine\scheduler\Task{
-    public function onRun(int $currentTick) : void{
-      Server::getInstance()->getAsyncPool()->submitTask(new UpdateData());
-      Server::getInstance()->getAsyncPool()->submitTask(new WorldWideData());
-    }
+use pocketmine\utils\Internet;
+
+class WorldWideData extends AsyncTask{
+
+
+	public function __construct(){}
+
+	public function onRun() : void{
+		$result = Internet::getURL("https://disease.sh/v3/covid-19/all");
+        if ($result == false){return;}
+		$this->setResult($result);
+	}
+
+	public function onCompletion(Server $server) : void{
+		$plugin = Server::getInstance()->getPluginManager()->getPlugin("CovidUI");
+
+		if($plugin === null){
+			return;
+		}
+
+		$result = $this->getResult();
+        \ErikPDev\CovidUI\Main::getInstance()->WorldWideData = json_decode($result,true);   
+        \ErikPDev\CovidUI\Main::getInstance()->scoreHud->update();
+	}
 }

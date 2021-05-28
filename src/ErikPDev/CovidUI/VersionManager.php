@@ -29,12 +29,22 @@
  * ------------------------------------------------------------------------
  */
 
+ // Feel free to use this in your plugins, but you should credit.
 namespace ErikPDev\CovidUI;
-use pocketmine\utils\Internet;
-use pocketmine\Server;
-class RepeatUpdateData extends \pocketmine\scheduler\Task{
-    public function onRun(int $currentTick) : void{
-      Server::getInstance()->getAsyncPool()->submitTask(new UpdateData());
-      Server::getInstance()->getAsyncPool()->submitTask(new WorldWideData());
+
+class VersionManager{
+    
+    private $main;
+
+    public function __construct(Main $main){
+        $this->main = $main;
+    }
+
+    public function isLatest(string $pluginName,float $verison){ 
+        $PluginVerison = floatval( $this->main->getServer()->getPluginManager()->getPlugin($pluginName)->getDescription()->getVersion() );
+        if($PluginVerison >= $verison){
+            return true;
+        }
+        return false;
     }
 }

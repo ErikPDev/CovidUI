@@ -39,14 +39,31 @@ use pocketmine\event\Listener;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use jojoe77777\FormAPI\CustomForm;
-
+use ErikPDev\CovidUI\ScoreHUDListener;
 use ErikPDev\CovidUI\RepeatUpdateData;
+use ErikPDev\CovidUI\VersionManager;
 class Main extends PluginBase implements Listener {
-    public $interval,$requestedData;
+    public $interval,$requestedData,$WorldWideData;
     private static $instance = NULL;
     
     public function onEnable() {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
+        $this->versionManager = new VersionManager($this);
+
+        if($this->getServer()->getPluginManager()->getPlugin("ScoreHud") != null){
+          if(is_dir($this->getServer()->getPluginManager()->getPlugin("ScoreHud")->getDataFolder()."addons")){
+            if( !file_exists( $this->getServer()->getPluginManager()->getPlugin("ScoreHud")->getDataFolder()."addons\VoteParty.php" ) ){
+              file_put_contents( $this->getServer()->getPluginManager()->getPlugin("ScoreHud")->getDataFolder()."addons\VoteParty.php", $this->getResource('/addon/VoteParty.php'));
+              $this->getLogger()->debug("Added addon to ScoreHUD");
+            }
+          }else{
+            $this->scoreHud = new ScoreHUDListener($this);
+            $this->getServer()->getPluginManager()->registerEvents($this->scoreHud, $this);
+            $this->ScoreHudSupport = true;
+            $this->getLogger()->debug("ScoreHud support is enabled.");
+          }
+        }
+
         Server::getInstance()->getAsyncPool()->submitTask(new Update("CovidUI", "1.1"));
         $this->saveDefaultConfig();
         $this->reloadConfig();
